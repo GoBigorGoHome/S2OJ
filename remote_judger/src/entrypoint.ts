@@ -9,7 +9,7 @@ const {
 const UOJ_BASEURL = `${UOJ_PROTOCOL}://${UOJ_HOST}`;
 
 daemon({
-  server_url: UOJ_BASEURL,
+  server_url: UOJ_BASEURL, // http://uoj-web
   judger_name: UOJ_JUDGER_NAME,
   password: UOJ_JUDGER_PASSWORD,
 });

@@ -8,7 +8,7 @@ use Curl\Url;
 
 class Curl extends BaseCurl
 {
-    const VERSION = '9.13.1';
+    const VERSION = '9.14.3';
     const DEFAULT_TIMEOUT = 30;
 
     public $curl = null;
@@ -364,7 +364,8 @@ class Curl extends BaseCurl
      *
      * @return boolean
      */
-    public function _fastDownload($url, $filename, $connections = 4) {
+    public function _fastDownload($url, $filename, $connections = 4)
+    {
         // First we need to retrive the 'Content-Length' header.
         // Use GET because not all hosts support HEAD requests.
         $this->setOpts([
@@ -1112,6 +1113,20 @@ class Curl extends BaseCurl
     }
 
     /**
+     * Set Protocols
+     *
+     * Limit what protocols libcurl will accept for a request.
+     *
+     * @access public
+     * @param  $protocols
+     * @see    Curl::setRedirectProtocols()
+     */
+    public function setProtocols($protocols)
+    {
+        $this->setOpt(CURLOPT_PROTOCOLS, $protocols);
+    }
+
+    /**
      * Set Retry
      *
      * Number of retries to attempt or decider callable.
@@ -1133,6 +1148,20 @@ class Curl extends BaseCurl
             $maximum_number_of_retries = $mixed;
             $this->remainingRetries = $maximum_number_of_retries;
         }
+    }
+
+    /**
+     * Set Redirect Protocols
+     *
+     * Limit what protocols libcurl will accept when following a redirect.
+     *
+     * @access public
+     * @param  $redirect_protocols
+     * @see    Curl::setProtocols()
+     */
+    public function setRedirectProtocols($redirect_protocols)
+    {
+        $this->setOpt(CURLOPT_REDIR_PROTOCOLS, $redirect_protocols);
     }
 
     /**
@@ -1294,7 +1323,7 @@ class Curl extends BaseCurl
 
             if ($request_headers_count === 0 && (
                 $this->getOpt(CURLOPT_VERBOSE) ||
-                $this->getOpt(CURLINFO_HEADER_OUT) !== true
+                !$this->getOpt(CURLINFO_HEADER_OUT)
             )) {
                 echo
                     'Warning: Request headers (Curl::requestHeaders) are expected to be empty ' .
@@ -1327,11 +1356,11 @@ class Curl extends BaseCurl
             }
 
             if (!isset($this->responseHeaders['Content-Type'])) {
-                echo 'Response did not set a content type' . "\n";
+                echo 'Response did not set a content type.' . "\n";
             } elseif (preg_match($this->jsonPattern, $this->responseHeaders['Content-Type'])) {
-                echo 'Response appears to be JSON' . "\n";
+                echo 'Response appears to be JSON.' . "\n";
             } elseif (preg_match($this->xmlPattern, $this->responseHeaders['Content-Type'])) {
-                echo 'Response appears to be XML' . "\n";
+                echo 'Response appears to be XML.' . "\n";
             }
 
             if ($this->curlError) {
@@ -1592,7 +1621,8 @@ class Curl extends BaseCurl
     public function __get($name)
     {
         $return = null;
-        if (in_array($name, self::$deferredProperties, true) && is_callable([$this, $getter = '_get_' . $name])) {
+        if (in_array($name, self::$deferredProperties, true) &&
+            is_callable([$this, $getter = '_get' . ucfirst($name)])) {
             $return = $this->$name = $this->$getter();
         }
         return $return;
@@ -1603,7 +1633,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_curlErrorCodeConstants()
+    private function _getCurlErrorCodeConstants()
     {
         $constants = get_defined_constants(true);
         $filtered_array = array_filter(
@@ -1622,7 +1652,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_curlErrorCodeConstant()
+    private function _getCurlErrorCodeConstant()
     {
         $curl_const_by_code = $this->curlErrorCodeConstants;
         if (isset($curl_const_by_code[$this->curlErrorCode])) {
@@ -1636,7 +1666,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_curlOptionCodeConstants()
+    private function _getCurlOptionCodeConstants()
     {
         $constants = get_defined_constants(true);
         $filtered_array = array_filter(
@@ -1660,7 +1690,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_effectiveUrl()
+    private function _getEffectiveUrl()
     {
         return $this->getInfo(CURLINFO_EFFECTIVE_URL);
     }
@@ -1670,7 +1700,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_rfc2616()
+    private function _getRfc2616()
     {
         return array_fill_keys(self::$RFC2616, true);
     }
@@ -1680,7 +1710,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_rfc6265()
+    private function _getRfc6265()
     {
         return array_fill_keys(self::$RFC6265, true);
     }
@@ -1690,7 +1720,7 @@ class Curl extends BaseCurl
      *
      * @access private
      */
-    private function _get_totalTime()
+    private function _getTotalTime()
     {
         return $this->getInfo(CURLINFO_TOTAL_TIME);
     }
@@ -1919,6 +1949,9 @@ class Curl extends BaseCurl
      */
     private function initialize($base_url = null, $options = [])
     {
+        $this->setProtocols(CURLPROTO_HTTPS | CURLPROTO_HTTP);
+        $this->setRedirectProtocols(CURLPROTO_HTTPS | CURLPROTO_HTTP);
+
         if (isset($options)) {
             $this->setOpts($options);
         }
@@ -2012,7 +2045,8 @@ class Curl extends BaseCurl
  *
  * @return callable
  */
-function createHeaderCallback($header_callback_data) {
+function createHeaderCallback($header_callback_data)
+{
     return function ($ch, $header) use ($header_callback_data) {
         if (preg_match('/^Set-Cookie:\s*([^=]+)=([^;]+)/mi', $header, $cookie) === 1) {
             $header_callback_data->responseCookies[$cookie[1]] = trim($cookie[2], " \n\r\t\0\x0B");
@@ -2041,7 +2075,8 @@ function createHeaderCallback($header_callback_data) {
  *
  * @return callable
  */
-function createStopRequestFunction($header_callback_data) {
+function createStopRequestFunction($header_callback_data)
+{
     return function (
         $resource,
         $download_size,

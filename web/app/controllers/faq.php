@@ -14,7 +14,7 @@ requireLib('mathjax');
 
 				<h4 class="mt-4"><?= UOJConfig::$data['profile']['oj-name-short'] ?> 是什么</h4>
 				<p class="card-text">
-					见 <a href="https://sjzezoj.com/blogs/1">https://sjzezoj.com/blogs/1</a>。
+					大树老师的教室。
 				</p>
 
 				<h4 class="mt-4">测评环境</h4>
@@ -77,7 +77,7 @@ requireLib('mathjax');
 					快使用 Gravatar 吧！Gravatar 地址：<a href="https://cn.gravatar.com" target="_blank">https://cn.gravatar.com</a>。进去后注册个帐号然后与邮箱绑定并上传头像，就 OK 啦！
 				</p>
 				<p class="card-text">
-					上不去 Gravatar？没关系，我们现在也支持 QQ 头像了！你只需要前往 “更改个人信息” 页面填写自己的 QQ 号，并将 “头像来源” 选为 “QQ” 就可以让你的 QQ 头像显示在 S2OJ 上啦！
+					上不去 Gravatar？没关系，我们现在也支持 QQ 头像了！你只需要前往 “更改个人信息” 页面填写自己的 QQ 号，并将 “头像来源” 选为 “QQ” 就可以让你的 QQ 头像显示在 <?= UOJConfig::$data['profile']['oj-name-short'] ?> 上啦！
 				</p>
 
 				<h4 class="mt-4">递归 10<sup>7</sup> 层怎么没爆栈啊</h4>
@@ -85,20 +85,10 @@ requireLib('mathjax');
 					没错就是这样！除非是特殊情况，<?= UOJConfig::$data['profile']['oj-name-short'] ?> 测评程序时的栈大小与该题的空间限制是相等的！
 				</p>
 
-				<h4 class="mt-4">联系方式</h4>
-				<p class="card-text">
-					题目相关问题请联系各校区的竞赛教练以及题目管理员。
-				</p>
-				<p class="card-text">
-					系统相关问题请邮件联系 <a href="https://sjzezoj.com/user/baoshuo" class="uoj-username">baoshuo</a>（<a href="mailto:i@baoshuo.ren">i@baoshuo.ren</a>）
-					和 <a href="https://sjzezoj.com/user/nekko" class="uoj-username">nekko</a>（<a href="mailto:1139855151@qq.com">1139855151@qq.com</a>）。
-				</p>
-
 				<h4 class="mt-4">开源项目</h4>
 				<p class="card-text">
 					<?= UOJConfig::$data['profile']['oj-name-short'] ?> 的源代码存放于
-					<a href="https://github.com/renbaoshuo/S2OJ" target="_blank">https://github.com/renbaoshuo/S2OJ</a>。
-					如果你网不太好，打不开 GitHub 的话，也可以点击 <a href="https://git.m.ac/baoshuo/S2OJ" target="_blank">https://git.m.ac/baoshuo/S2OJ</a> 查看哦！这两个仓库的内容是一模一样的。
+					<a href="https://github.com/GoBigorGoHome/toj" target="_blank">https://github.com/GoBigorGoHome/toj</a>。
 				</p>
 
 				<h4 class="mt-4">用户手册</h4>

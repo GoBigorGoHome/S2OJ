@@ -977,7 +977,7 @@ $.fn.text_file_form_group = function(name, text) {
 }
 
 // remote judge submit type group
-$.fn.remote_submit_type_group = function(oj, pid, url, submit_type) {
+$.fn.remote_submit_type_group = function(oj, submit_type) {
 	return this.each(function() {
 		var input_submit_type_bot_id = 'input-submit_type_bot';
 		var input_submit_type_my_id = 'input-submit_type_my';
@@ -2281,7 +2281,7 @@ $(document).ready(function() {
 
 // Copy button
 $(document).ready(function() {
-	$('.markdown-body pre, .copy-button-container pre').each(function () {
+	$('.markdown-body pre:not(:has(code.language-format)), .copy-button-container pre').each(function () {
 		var thisEl = $(this);
 
 		$(this).wrap(

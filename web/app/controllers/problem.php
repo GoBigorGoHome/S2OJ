@@ -258,7 +258,7 @@ if ($pre_submit_check_ret === true && !$no_more_submission) {
 			<h5>Remote Judge 配置</h5>
 			<div class="" id="answer-remote_submit_group"></div>
 			<script>
-				$('#answer-remote_submit_group').remote_submit_type_group("{$remote_oj}", "{$remote_pid}", "{$remote_url}", {$submit_type});
+				$('#answer-remote_submit_group').remote_submit_type_group("{$remote_oj}", {$submit_type});
 			</script>
 		EOD);
 	}
@@ -348,13 +348,6 @@ if (UOJContest::cur()) {
 							<?= $problem_content['statement'] ?>
 						</article>
 
-						<?php if (UOJProblem::info('type') == 'remote') : ?>
-							<hr>
-
-							<article class="mt-3 markdown-body remote-content">
-								<?= $problem_content['remote_content'] ?>
-							</article>
-						<?php endif ?>
 					</div>
 					<div class="tab-pane" id="submit">
 						<?php if ($pre_submit_check_ret !== true) : ?>
@@ -462,14 +455,6 @@ if (UOJContest::cur()) {
 					</span>
 					<span class="text-end">
 						<?= UOJProblem::cur()->getUploaderLink() ?>
-					</span>
-				</li>
-				<li class="list-group-item d-flex justify-content-between align-items-center">
-					<span class="flex-shrink-0">
-						<?= UOJLocale::get('problems::problem source') ?>
-					</span>
-					<span class="text-end">
-						<?= UOJProblem::cur()->getProviderLink() ?>
 					</span>
 				</li>
 				<?php if (!UOJContest::cur() || UOJContest::cur()->progress() >= CONTEST_FINISHED) : ?>

@@ -74,6 +74,9 @@ $new_remote_problem_form->addInput('remote_problem_id', [
 		return '不合法的远程 OJ 类型';
 	},
 ]);
+
+use League\HTMLToMarkdown\HtmlConverter;
+
 $new_remote_problem_form->handle = function (&$vdata) {
 	$remote_online_judge = $_POST['remote_online_judge'];
 	$remote_problem_id = $vdata['remote_problem_id'];
@@ -115,11 +118,19 @@ $new_remote_problem_form->handle = function (&$vdata) {
 		$data['statement'] = "<div data-pdf data-src=\"/problem/$id/resources/statement.pdf\"></div>\n" . $data['statement'];
 	}
 
+	$remote_content = HTML::purifier(['a' => ['target' => 'Enum#_blank']])->purify($data['statement']);
+	$converter = new HtmlConverter(array('strip_tags' => true, 'italic_style' => '*'));
+	$statement_md = $converter->convert($remote_content);
+	$statement_md = str_replace("\\\\", "\\", $statement_md);
+	$statement_md = str_replace("\\_", "_", $statement_md);
+	$inline_math_delimiters = array("\\(", "\\)");
+	$statement_md = str_replace($inline_math_delimiters, "$", $statement_md);
+	
 	DB::insert([
 		"insert into problems_contents",
 		"(id, remote_content, statement, statement_md)",
 		"values",
-		DB::tuple([$id, HTML::purifier(['a' => ['target' => 'Enum#_blank']])->purify($data['statement']), '', ''])
+		DB::tuple([$id, $remote_content, $remote_content, $statement_md])
 	]);
 
 	DB::insert([

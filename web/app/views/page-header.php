@@ -113,7 +113,7 @@ $new_msg_tot = $new_user_msg_num + $new_system_msg_num;
 				},
 				options: {
 					skipHtmlTags: {
-						'[-]': ['pre']
+						'[-]': ['pre', 'code']
 					},
 					renderActions: {
 						addCopyText: [
@@ -195,6 +195,10 @@ $new_msg_tot = $new_user_msg_num + $new_system_msg_num;
 		<?= HTML::css_link('/css/highlightjs.github.min.css?v=11.6.0-20230223') ?>
 		<?= HTML::js_src('/js/highlightjs.min.js?v=11.6.0-20221005') ?>
 		<script>
+			hljs.configure({
+				cssSelector: 'pre code[class^="language-"]',
+				noHighlightRe: /language-format/
+			});
 			$(document).ready(function() {
 				hljs.highlightAll();
 			});

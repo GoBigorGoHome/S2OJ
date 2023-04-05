@@ -78,6 +78,7 @@ class UOJBlogEditor {
 		$val = $this->validator[$name];
 		return $val($this->post_data[$name]);
 	}
+
 	private function receivePostData() {
 		$errors = array();
 
@@ -108,6 +109,7 @@ class UOJBlogEditor {
 
 		if ($this->show_editor) {
 			if ($this->type == 'blog') {
+				// md转html
 				$this->post_data['content'] = $parsedown->text($this->post_data['content_md']);
 
 				if (preg_match('/^.*<!--.*readmore.*-->.*$/m', $this->post_data['content'], $matches, PREG_OFFSET_CAPTURE)) {
@@ -218,6 +220,7 @@ class UOJBlogEditor {
 			$this->handleSave();
 		}
 	}
+
 	public function printHTML() {
 		global $REQUIRE_LIB;
 

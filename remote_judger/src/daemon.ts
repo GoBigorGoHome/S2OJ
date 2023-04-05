@@ -31,7 +31,7 @@ interface UOJSubmission {
 export default async function daemon(config: UOJConfig) {
   const request = (url: string, data = {}) =>
     superagent
-      .post(`${config.server_url}/judge${url}`)
+      .post(`${config.server_url}/judge${url}`) // http://uoj-web/judge/submit
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send(
         Object.entries({
@@ -55,7 +55,6 @@ export default async function daemon(config: UOJConfig) {
 
       if (error) {
         logger.error('/submit', error.message);
-
         await sleep(2 * TIME.second);
       } else if (text.startsWith('Nothing to judge')) {
         await sleep(TIME.second);

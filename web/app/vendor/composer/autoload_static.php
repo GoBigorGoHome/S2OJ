@@ -27,6 +27,10 @@ class ComposerStaticInit0d7c2cd5c2dbf2120e4372996869e900
         array (
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'L' => 
+        array (
+            'League\\HTMLToMarkdown\\' => 22,
+        ),
         'G' => 
         array (
             'Gregwar\\' => 8,
@@ -55,6 +59,10 @@ class ComposerStaticInit0d7c2cd5c2dbf2120e4372996869e900
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'League\\HTMLToMarkdown\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/html-to-markdown/src',
         ),
         'Gregwar\\' => 
         array (

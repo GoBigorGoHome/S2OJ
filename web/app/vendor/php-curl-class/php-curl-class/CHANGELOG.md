@@ -6,6 +6,22 @@ backwards-incompatible changes that will affect existing usage.
 
 <!-- CHANGELOG_PLACEHOLDER -->
 
+## 9.14.3 - 2023-03-13
+
+- Remove use of array_merge() inside loop ([#774](https://github.com/php-curl-class/php-curl-class/pull/774))
+
+## 9.14.2 - 2023-03-09
+
+- Clean up: Reduce nesting ([#771](https://github.com/php-curl-class/php-curl-class/pull/771))
+
+## 9.14.1 - 2023-02-27
+
+- Remove coding standard ruleset exclusion ([#768](https://github.com/php-curl-class/php-curl-class/pull/768))
+
+## 9.14.0 - 2023-02-26
+
+- Make https:// and http:// the allowed request protocols by default ([#767](https://github.com/php-curl-class/php-curl-class/pull/767))
+
 ## 9.13.1 - 2023-01-16
 
 - Allow uploads with CURLStringFile type  ([#762](https://github.com/php-curl-class/php-curl-class/pull/762))

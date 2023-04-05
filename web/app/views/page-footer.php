@@ -30,11 +30,9 @@ if (!isset($ShowPageFooter)) {
 			</div>
 			<div class="mt-2 mt-lg-0">
 				Based on
-				<a class="text-decoration-none" href="https://uoj.ac" target="_blank">UOJ</a>,
+				<a class="text-decoration-none" href="https://github.com/renbaoshuo/S2OJ" target="_blank">S2OJ</a>,
 				modified by
-				<a class="text-decoration-none" href="https://baoshuo.ren" target="_blank">Baoshuo</a>
-				for
-				<a class="text-decoration-none" href="http://www.sjzez.com">SJZEZ</a>
+				<a class="text-decoration-none" href="https://github.com/GoBigorGoHome" target="_blank">GoBigorGoHome</a>
 			</div>
 		</div>
 	</footer>

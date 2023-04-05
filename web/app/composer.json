@@ -7,7 +7,8 @@
         "php-curl-class/php-curl-class": "^9.13",
         "ext-dom": "20031129",
         "ivopetkov/html5-dom-document-php": "2.*",
-        "peppeocchi/php-cron-scheduler": "^4.0"
+        "peppeocchi/php-cron-scheduler": "^4.0",
+        "league/html-to-markdown": "5.*"
     },
 	"autoload": {
 		"classmap": [

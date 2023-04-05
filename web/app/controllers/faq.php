@@ -88,7 +88,7 @@ requireLib('mathjax');
 				<h4 class="mt-4">开源项目</h4>
 				<p class="card-text">
 					<?= UOJConfig::$data['profile']['oj-name-short'] ?> 的源代码存放于
-					<a href="https://github.com/GoBigorGoHome/toj" target="_blank">https://github.com/GoBigorGoHome/toj</a>。
+					<a href="https://github.com/GoBigorGoHome/toj/tree/dev" target="_blank">https://github.com/GoBigorGoHome/toj</a>。
 				</p>
 
 				<h4 class="mt-4">用户手册</h4>

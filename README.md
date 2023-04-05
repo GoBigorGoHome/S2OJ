@@ -1,8 +1,8 @@
 <img src="./web/images/logo_small.png" alt="Logo" width="100" height="100" align="right" />
 
-# S2OJ
+# TOJ
 
-> 基于 Universal Online Judge 的在线测评系统。专为 [石家庄二中](http://www.sjzez.com) 设计。
+> 基于 [S2OJ](https://github.com/renbaoshuo/S2OJ) 的在线测评系统。
 
 ## 特性
 
@@ -17,6 +17,7 @@
 - 支持赛后总结功能，从点滴反思中汲取奋进力量。
 - 更细化的权限管理。
 - 支持 Codeforces、AtCoder、UniversalOJ、LibreOJ、洛谷等平台的 Remote Judge。
+- 从别的 OJ 抓取的题面自动转成 markdown，方便编辑。
 - 其他应校内训练需求而新增的功能。
 
 ## 文档
@@ -47,8 +48,7 @@ docker-compose -f docker-compose.development.yml up --build
 ## 感谢
 
 - [vfleaking](https://github.com/vfleaking) 将 UOJ 代码 [开源](https://github.com/vfleaking/uoj)
-- 向原项目或本项目贡献代码的人
-- 给我们启发与灵感以及提供意见和建议的人
+- 感谢 [renbaoshuo](https://github.com/renbaoshuo) 打造 S2OJ。
 
 ## 许可
 

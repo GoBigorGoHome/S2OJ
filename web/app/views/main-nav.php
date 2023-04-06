@@ -5,7 +5,7 @@ mb-4
 " role="navigation">
 	<div class="container">
 		<a class="navbar-brand fw-normal" href="<?= HTML::url('/') ?>">
-			<img src="<?= HTML::url('/images/logo_small.jpg') ?>" alt="Logo" width="24" height="24" class="d-inline-block align-text-top" />
+			<img src="<?= HTML::url('/images/logo_small_1.webp') ?>" alt="Logo" width="24" height="24" class="d-inline-block align-text-top" />
 			<?= UOJConfig::$data['profile']['oj-name-short'] ?>
 		</a>
 

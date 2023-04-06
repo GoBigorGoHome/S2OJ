@@ -93,7 +93,7 @@ if (isset($_POST['login'])) {
 
 <main class="login-container mx-auto w-100 text-center">
 	<form id="form-login" method="post">
-		<img class="mb-4" src="<?= HTML::url('/images/sjzez.png') ?>">
+		<img class="mb-4" src="<?= HTML::url('/images/toj-1.webp') ?>" width="350">
 
 		<div class="login-input-group mb-3">
 			<div id="div-username" class="input-group">

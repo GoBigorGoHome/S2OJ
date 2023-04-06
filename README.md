@@ -1,4 +1,4 @@
-<img src="./web/images/logo_small.png" alt="Logo" width="100" height="100" align="right" />
+<img src="./web/images/logo_small_1.webp" alt="Logo" width="100" height="100" align="right" />
 
 # TOJ
 

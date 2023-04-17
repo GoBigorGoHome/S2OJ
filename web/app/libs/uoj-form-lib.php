@@ -85,6 +85,7 @@ function newSubmissionForm($form_name, $requirement, $zip_file_name_gen, $handle
 
 		foreach ($requirement as $req) {
 			if ($_POST["{$form_name}_{$req['name']}_upload_type"] == 'editor') {
+				// 把提交的代码存储到 $zip_file 里。
 				$zip_file->addFromString($req['file_name'], $_POST["{$form_name}_{$req['name']}_editor"]);
 			} else {
 				$tmp_name = UOJForm::uploadedFileTmpName("{$form_name}_{$req['name']}_file");
@@ -112,6 +113,7 @@ function newSubmissionForm($form_name, $requirement, $zip_file_name_gen, $handle
 
 		$handle($zip_file_name, $content, $tot_size);
 	};
+
 	return $form;
 }
 

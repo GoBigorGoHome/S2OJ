@@ -562,7 +562,7 @@ class UOJSubmission {
 								}
 								echo '</span>';
 							}
-							echo '<span class="uoj-score">', $actual_score, '</span>';
+							echo '<span class="uoj-score">', sprintf("%.4g", $actual_score), '</span>';
 							echo $tag_ed;
 						}
 					}

@@ -137,6 +137,7 @@ function handleUpload($zip_file_name, $content, $tot_size) {
 		}
 	}
 
+	// 把提交记录写入数据库。
 	$id = UOJSubmission::onUpload($zip_file_name, $content, $tot_size, $is_participating);
 
 	if ($is_participating) {
@@ -231,6 +232,7 @@ if ($pre_submit_check_ret === true && !$no_more_submission) {
 		$zip_answer_form->runAtServer();
 	}
 
+	// 提交代码的form
 	$answer_form = newSubmissionForm(
 		'answer',
 		$submission_requirement,
@@ -265,6 +267,7 @@ if ($pre_submit_check_ret === true && !$no_more_submission) {
 
 	$answer_form->extra_validator = $submission_extra_validator;
 	$answer_form->succ_href = $is_participating ? UOJContest::cur()->getUri('/submissions') : '/submissions';
+	// 只有 POST 请求才会触发 run_at_server_handler。
 	$answer_form->runAtServer();
 }
 

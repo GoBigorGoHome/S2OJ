@@ -29,6 +29,7 @@ interface UOJSubmission {
 }
 
 export default async function daemon(config: UOJConfig) {
+  // 向 uoj-web 轮询判题的函数。
   const request = (url: string, data = {}) =>
     superagent
       .post(`${config.server_url}/judge${url}`) // http://uoj-web/judge/submit
@@ -47,10 +48,13 @@ export default async function daemon(config: UOJConfig) {
           )
           .join('&')
       );
+
+  // 构造一个 VJudge 对象。
   const vjudge = await apply(request);
 
   while (true) {
     try {
+      // 请求 http://uoj-web/judge/submit
       const { text, error } = await request('/submit');
 
       if (error) {
@@ -64,6 +68,7 @@ export default async function daemon(config: UOJConfig) {
         const config = Object.fromEntries(content.config);
         const tmpdir = `/tmp/s2oj_rmj/${id}/`;
 
+        // remote judge 不支持只测评样例。
         if (config.test_sample_only === 'on') {
           await request('/submit', {
             submit: 1,
@@ -144,6 +149,7 @@ export default async function daemon(config: UOJConfig) {
         // Start judging
         logger.info('Start judging', id, `(problem ${data.problem_id})`);
         try {
+          // 远端评测是通过调用 VJudge 类的 judge() 方法实现的。
           await vjudge.judge(
             id,
             config.remote_online_judge,

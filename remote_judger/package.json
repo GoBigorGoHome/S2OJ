@@ -12,6 +12,7 @@
   "license": "AGPL-3.0",
   "private": true,
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "crlf-normalize": "^1.0.18",
     "fs-extra": "^11.1.0",
     "jsdom": "^21.0.0",
@@ -22,6 +23,7 @@
     "superagent-proxy": "^3.0.0"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.31",
     "@types/fs-extra": "^11.0.1",
     "@types/js-yaml": "^4.0.5",
     "@types/jsdom": "^20.0.1",

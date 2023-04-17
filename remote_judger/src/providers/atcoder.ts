@@ -4,6 +4,7 @@ import proxy from 'superagent-proxy';
 import sleep from '../utils/sleep';
 import { IBasicProvider, RemoteAccount, USER_AGENT } from '../interface';
 import Logger from '../utils/logger';
+import * as cheerio from 'cheerio';
 
 proxy(superagent);
 const logger = new Logger('remote/atcoder');
@@ -185,6 +186,7 @@ export default class AtcoderProvider implements IBasicProvider {
     const programType = LANGS_MAP[lang] || LANGS_MAP['C++'];
     const comment = programType.comment;
 
+    // 给提交的代码加上注释
     if (comment) {
       const msg = `S2OJ Submission #${submissionId} @ ${new Date().getTime()}`;
       if (typeof comment === 'string') code = `${comment} ${msg}\n${code}`;
@@ -252,6 +254,37 @@ export default class AtcoderProvider implements IBasicProvider {
     throw new Error('Method not implemented.');
   }
 
+  get_ac_cnt($ : cheerio.Root) {
+    const all_ac_span = $('#main-container > div.row > div:nth-child(2) > div:nth-child(9) > div > table > tbody > tr:nth-child(3) > td:nth-child(3)').find('span.label-success');
+    if (all_ac_span !== null) {
+      const num = all_ac_span.parent().next().text().match(/\d+/)?.at(0);
+      if (num === undefined) return 0;
+      const all_ac_count = +num;
+      const sample_ac_span = $('#main-container > div.row > div:nth-child(2) > div:nth-child(9) > div > table > tbody > tr:nth-child(3) > td:nth-child(2)').find('span.label-success');
+      if (sample_ac_span === null)
+        return all_ac_count;
+      const sample_ac_num = sample_ac_span.parent().next().text().match(/\d+/)?.at(0);
+      if (sample_ac_num === undefined)
+        return all_ac_count;
+      return all_ac_count - (+sample_ac_num);
+    }
+    return 0;
+  }
+
+  get_test_cases_cnt($ : cheerio.Root) {
+    const samples = $('#main-container > div.row > div:nth-child(2) > div:nth-child(10) > table > tbody > tr:nth-child(1) > td:nth-child(2)').text();
+    const all_tests = $('#main-container > div.row > div:nth-child(2) > div:nth-child(10) > table > tbody > tr:nth-child(2) > td:nth-child(2)').text();
+    return all_tests.split(',').length - samples.split(',').length;
+  }
+
+  async get_points(contest_id : string, submission_id : string) {
+    const detail_url = `/contests/${contest_id}/submissions/${submission_id}`;
+    const { text } = await this.get(detail_url).retry(3);
+    const $ = cheerio.load(text);
+    return this.get_ac_cnt($) * 100 / this.get_test_cases_cnt($);
+  }
+
+  // id：submission ID on AtCoder.
   async waitForSubmission(id: string, next, end, problem_id: string) {
     let count = 0;
     let fail = 0;
@@ -319,14 +352,19 @@ export default class AtcoderProvider implements IBasicProvider {
         const time = parseInt(elements[1].innerHTML.trim());
         const memory = parseInt(elements[2].innerHTML.trim());
 
+        // 计算得分
+        let atcoder_score = 0;
+        if (statusElem.title === 'Accepted' ||
+            statusElem.innerHTML.trim() === 'AC') {
+            atcoder_score = 100;
+        } else {
+          atcoder_score = await this.get_points(contestId, id);
+        }
+
         return await end({
           id,
           status: statusElem.title || 'None',
-          score:
-            statusElem.title === 'Accepted' ||
-            statusElem.innerHTML.trim() === 'AC'
-              ? 100
-              : 0,
+          score: atcoder_score,
           time,
           memory,
         });

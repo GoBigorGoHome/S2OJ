@@ -24,6 +24,8 @@ class AccountService {
     end
   ) {
     try {
+      // 提交代码。
+      // rid 是远程OJ的提交编号。
       const rid = await this.api.submitProblem(
         problem_id,
         language,
@@ -102,6 +104,7 @@ class VJudge {
     judge_time: string,
     config
   ) {
+    // 用到了 payload 的 status 或 test_id
     const next = async payload => {
       return await this.request('/submit', {
         'update-status': 1,
@@ -157,8 +160,11 @@ class VJudge {
     };
 
     if (!config.remote_submit_type || config.remote_submit_type == 'bot') {
+      // 使用共用帐号提交。
       if (!this.providers[type]) throw new Error(`No provider ${type}`);
 
+      // 调用 AccountService 的 judge() 方法。
+      // 最终是调用 IBasicProvider 的 submitProblem 方法。
       await this.providers[type].judge(
         id,
         problem_id,
@@ -168,6 +174,7 @@ class VJudge {
         end
       );
     } else if (config.remote_submit_type == 'my') {
+      // 使用自有帐号提交。
       if (!this.p_imports[type]) throw new Error(`No provider ${type}`);
 
       try {

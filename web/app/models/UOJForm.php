@@ -75,6 +75,7 @@ class UOJForm {
 				}
 				UOJResponse::message($err_str);
 			}
+			// 提交 form 时调用 $this->handle($this->vdata)
 			$fun = $this->handle;
 			$fun($this->vdata);
 

@@ -254,10 +254,11 @@ export async function apply(request: any) {
 
   await vjudge.addProvider('codeforces');
   await vjudge.addProvider('atcoder');
-  // await vjudge.addProvider('uoj');
+  await vjudge.addProvider('uoj');
+  // loj 用了 recaptcha v3，bot 无法登录
   // await vjudge.addProvider('loj');
   // await vjudge.addProvider('luogu');
-  // await vjudge.addProvider('qoj');
+  await vjudge.addProvider('qoj');
 
   return vjudge;
 }

@@ -168,7 +168,7 @@ export default async function daemon(config: UOJConfig) {
               status: 'Judged',
               score: 0,
               error: 'Judgment Failed',
-              details: `<error>${htmlspecialchars(err.message)}</error>`,
+              details: `<error>${htmlspecialchars(err.stack)}</error>`,
             }),
             judge_time,
           });

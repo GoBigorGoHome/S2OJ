@@ -341,9 +341,8 @@ export default class CodeforcesProvider implements IBasicProvider {
     this.csrf = document
       .querySelector('meta[name="X-Csrf-Token"]')
       .getAttribute('content');
-    return document
-      .querySelector('[data-submission-id]')
-      .getAttribute('data-submission-id');
+    const submission = document.querySelector('[data-submission-id]').getAttribute('data-submission-id');
+    return type !== 'GYM' ? submission : `${contestId}#${submission}`;
   }
 
   async ensureIsOwnSubmission(id: string) {
@@ -359,13 +358,13 @@ export default class CodeforcesProvider implements IBasicProvider {
       await sleep(500);
 
       try {
+        const contestId = id.includes('#') ? id.split('#')[0] : null;
         const { body } = await this.post('/data/submitSource')
-          .send({
-            csrf_token: this.csrf,
-            submissionId: id,
-          })
-          .retry(3);
-
+            .set('referer', contestId ? `https://codeforces.com/gym/${contestId}/my` : 'https://codeforces.com/problemset/status?my=on')
+            .send({
+                csrf_token: this.csrf,
+                submissionId: contestId ? id.split('#')[1] : id,
+            }).retry(3);
         if (body.compilationError === 'true') {
           return await end({
             id,
@@ -437,10 +436,10 @@ export default class CodeforcesProvider implements IBasicProvider {
           '<remote-result-container>' +
           '<remote-result-table>' +
           Object.entries({
-            比赛: stripHtml(body.contestName).result,
-            题目: stripHtml(body.problemName).result,
-            提交记录: `<a href="https://codeforces.com${body.href}">${id}</a>`,
-            账号: `<a href="https://codeforces.com/profile/${remote_handle}">${remote_handle}</a>`,
+            // 比赛: stripHtml(body.contestName).result,
+            // 题目: stripHtml(body.problemName).result,
+            // 提交记录: `<a href="https://codeforces.com${body.href}">${id}</a>`,
+            // 账号: `<a href="https://codeforces.com/profile/${remote_handle}">${remote_handle}</a>`,
             状态: stripHtml(body.verdict).result,
           })
             .map(

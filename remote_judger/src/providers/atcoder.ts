@@ -183,6 +183,16 @@ export default class AtcoderProvider implements IBasicProvider {
     next,
     end
   ) {
+    if (!(await this.ensureLogin())) {
+      await end({
+        error: true,
+        status: 'Judgment Failed',
+        message: 'Login failed',
+      });
+
+      return null;
+    }
+
     const programType = LANGS_MAP[lang] || LANGS_MAP['C++'];
     const comment = programType.comment;
 

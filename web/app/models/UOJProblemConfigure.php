@@ -13,6 +13,7 @@ class UOJProblemConfigure {
 		'ncmp' => 'ncmp: 单行或多行整数序列',
 		'wcmp' => 'wcmp: 单行或多行字符串序列',
 		'fcmp' => 'fcmp: 单行或多行数据（不忽略行末空格，但忽略文末回车）',
+		'lcmp' => 'lcmp: 单行或多行数据（忽略行内与行末的多余空格，同时忽略文末回车）',
 		'bcmp' => 'bcmp: 逐字节比较',
 		'uncmp' => 'uncmp: 单行或多行整数集合',
 		'yesno' => 'yesno: YES、NO 序列（不区分大小写）',

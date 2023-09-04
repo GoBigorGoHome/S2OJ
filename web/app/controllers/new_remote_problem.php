@@ -126,6 +126,27 @@ $new_remote_problem_form->handle = function (&$vdata) {
 	$inline_math_delimiters = array("\\(", "\\)");
 	$statement_md = str_replace($inline_math_delimiters, "$", $statement_md);
 	
+	// 翻译 atcoder 题面关键词
+	if ($remote_online_judge == "atcoder") {
+		$statement_md = str_replace("### Input", "### 输入", $statement_md);
+		$statement_md = str_replace("### Output", "### 输出", $statement_md);
+		$statement_md = str_replace("### Constraints", "### 限制", $statement_md);
+		$statement_md = str_replace("### Sample Input", "### 样例输入", $statement_md);
+		$statement_md = str_replace("### Sample Output", "### 样例输出", $statement_md);
+		$statement_md = str_replace("All input values are integers.", "输入的值都是整数。", $statement_md);
+		$statement_md = str_replace("All values in the input are integers.", "输入的值都是整数。", $statement_md);
+		$statement_md = str_replace("Print the answer as an integer.", "输出答案。", $statement_md);
+		$statement_md = str_replace("Print the answer.", "输出答案。", $statement_md);
+		// html 特殊字符
+		$statement_md = str_replace("&lt;", "<", $statement_md);
+		$statement_md = str_replace("&gt;", ">", $statement_md);
+		// 删除一些句子
+		$statement_md = str_replace("The input is given from Standard Input in the following format:\n", "", $statement_md);
+		$statement_md = str_replace("### Problem Statement\n", "", $statement_md);
+		// 给输入格式加上语言标记
+		$statement_md = str_replace("### 输入\n\n\n```", "### 输入\n\n\n```format", $statement_md);
+	}
+
 	DB::insert([
 		"insert into problems_contents",
 		"(id, remote_content, statement, statement_md)",

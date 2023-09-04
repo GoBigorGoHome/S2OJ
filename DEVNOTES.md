@@ -9,7 +9,9 @@ TODO：设置 docker daemon 开机启动。
 # 不要使用 sudo 运行 docker
 
 
+# 进入的容器的 bash
 
+`docker exec -it 容器名 bash`
 
 # Linux 系统管理
 
@@ -71,9 +73,11 @@ git rebase master
 
 # PHP
 
-PHH interactive shell
+PHP interactive shell
 
-`pha -a`
+`php -a`
+
+PHP 里的单引号字符串和双引号字符串语义不同。详见https://www.php.net/manual/en/language.types.string.php
 
 
 # 网站配置

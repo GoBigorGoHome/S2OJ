@@ -210,14 +210,14 @@ if ($_POST['image_upload_file_submit'] == 'submit') {
 				<h2 class="h3">水印</h2>
 				<?php if (isSuperUser($myUser)) : ?>
 					<div class="form-check d-inline-block d-md-block me-2">
-						<input class="form-check-input" type="radio" name="watermark" id="watermark-no_watermark" data-value="no_watermark">
+						<input class="form-check-input" type="radio" name="watermark" id="watermark-no_watermark" data-value="no_watermark" checked>
 						<label class="form-check-label" for="watermark-no_watermark">
 							无水印
 						</label>
 					</div>
 				<?php endif ?>
 				<div class="form-check d-inline-block d-md-block me-2">
-					<input class="form-check-input" type="radio" name="watermark" id="watermark-site_shortname" data-value="site_shortname" checked>
+					<input class="form-check-input" type="radio" name="watermark" id="watermark-site_shortname" data-value="site_shortname">
 					<label class="form-check-label" for="watermark-site_shortname">
 						<?= UOJConfig::$data['profile']['oj-name-short'] ?>
 					</label>

@@ -142,6 +142,7 @@ $new_remote_problem_form->handle = function (&$vdata) {
 		$statement_md = str_replace("&gt;", ">", $statement_md);
 		// 删除一些句子
 		$statement_md = str_replace("The input is given from Standard Input in the following format:\n", "", $statement_md);
+		$statement_md = str_replace("Input is given from Standard Input in the following format:\n", "", $statement_md);
 		$statement_md = str_replace("### Problem Statement\n", "", $statement_md);
 		// 给输入格式加上语言标记
 		$statement_md = str_replace("### 输入\n\n\n```", "### 输入\n\n\n```format", $statement_md);

@@ -135,6 +135,7 @@ $new_remote_problem_form->handle = function (&$vdata) {
 		$statement_md = str_replace("### Sample Output", "### 样例输出", $statement_md);
 		$statement_md = str_replace("All input values are integers.", "输入的值都是整数。", $statement_md);
 		$statement_md = str_replace("All values in the input are integers.", "输入的值都是整数。", $statement_md);
+		$statement_md = str_replace("All values in input are integers.", "输入的值都是整数。", $statement_md);
 		$statement_md = str_replace("Print the answer as an integer.", "输出答案。", $statement_md);
 		$statement_md = str_replace("Print the answer.", "输出答案。", $statement_md);
 		// html 特殊字符

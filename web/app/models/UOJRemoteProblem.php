@@ -93,7 +93,7 @@ class UOJRemoteProblem {
 
 	private static function getAtcoderProblemUrl($id) {
 		return static::$providers['atcoder']['url'] . '/contests/' . preg_replace_callback('/(\w+)([a-z][1-9]?)/', function ($matches) {
-			$contest = str_replace('_', '', $matches[1]);
+			$contest = str_replace('_', '-', rtrim($matches[1], "_"));
 
 			if (str_ends_with($matches[1], '_')) {
 				return "{$contest}/tasks/{$matches[1]}{$matches[2]}";

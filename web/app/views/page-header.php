@@ -104,12 +104,14 @@ $new_msg_tot = $new_user_msg_num + $new_system_msg_num;
 		<!-- MathJax -->
 		<script>
 			MathJax = {
+				loader: {load: ['[tex]/mathtools']},
 				tex: {
 					inlineMath: [
 						['$', '$'],
 						['\\(', '\\)']
 					],
-					processEscapes: true
+					processEscapes: true,
+					packages: {'[+]': ['mathtools']}
 				},
 				options: {
 					skipHtmlTags: {

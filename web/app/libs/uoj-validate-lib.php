@@ -122,7 +122,7 @@ function validateCodeforcesProblemId($str) {
 }
 
 function validateAtCoderProblemId($str) {
-	return preg_match('/^(\w+)([a-z][1-9]?)$/', $str);
+	return preg_match('/^(\w+)_([a-z1-9][1-9]?)$/', $str);
 }
 
 function validateLuoguProblemId($str) {

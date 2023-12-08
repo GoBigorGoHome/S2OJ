@@ -92,12 +92,8 @@ class UOJRemoteProblem {
 	}
 
 	private static function getAtcoderProblemUrl($id) {
-		return static::$providers['atcoder']['url'] . '/contests/' . preg_replace_callback('/(\w+)([a-z][1-9]?)/', function ($matches) {
-			$contest = str_replace('_', '-', rtrim($matches[1], "_"));
-
-			if (str_ends_with($matches[1], '_')) {
-				return "{$contest}/tasks/{$matches[1]}{$matches[2]}";
-			}
+		return static::$providers['atcoder']['url'] . '/contests/' . preg_replace_callback('/(\w+)_([a-z1-9][1-9]?)/', function ($matches) {
+			$contest = str_replace('_', '-', $matches[1]);
 
 			return "{$contest}/tasks/{$matches[1]}_{$matches[2]}";
 		}, $id);
@@ -324,12 +320,15 @@ class UOJRemoteProblem {
 		if (!$statement_dom) {
 			$statement_dom = $statement_container_dom->querySelector('.lang-ja');
 		}
-
+		if (!$statement_dom) {
+			$statement_dom = $statement_container_dom;
+		}
 		$statement_first_child = $statement_dom->querySelector('p');
-		$first_child_content = trim($statement_first_child->textContent);
-
-		if (str_starts_with($first_child_content, 'Score :') || str_starts_with($first_child_content, '配点 :')) {
-			$statement_dom->removeChild($statement_first_child);
+		if ($statement_first_child) {
+			$first_child_content = trim($statement_first_child->textContent);
+			if (str_starts_with($first_child_content, 'Score :') || str_starts_with($first_child_content, '配点 :')) {
+				$statement_dom->removeChild($statement_first_child);
+			}
 		}
 
 		foreach ($statement_dom->querySelectorAll('var') as &$elem) {
@@ -353,10 +352,10 @@ class UOJRemoteProblem {
 		$statement = $statement_dom->innerHTML;
 
 		// <var> => $
-		$statement = str_replace('<var>', '\\(', $statement);
+		$statement = str_replace('<var>', '$', $statement);
 
 		// </var> => $
-		$statement = str_replace('</var>', '\\)', $statement);
+		$statement = str_replace('</var>', '$', $statement);
 
 		return [
 			'type' => 'html',

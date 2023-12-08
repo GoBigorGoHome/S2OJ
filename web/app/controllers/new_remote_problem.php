@@ -123,8 +123,6 @@ $new_remote_problem_form->handle = function (&$vdata) {
 	$statement_md = $converter->convert($remote_content);
 	$statement_md = str_replace("\\\\", "\\", $statement_md);
 	$statement_md = str_replace("\\_", "_", $statement_md);
-	$inline_math_delimiters = array("\\(", "\\)");
-	$statement_md = str_replace($inline_math_delimiters, "$", $statement_md);
 	
 	// 翻译 atcoder 题面关键词
 	if ($remote_online_judge == "atcoder") {
@@ -145,6 +143,7 @@ $new_remote_problem_form->handle = function (&$vdata) {
 		$statement_md = str_replace("The input is given from Standard Input in the following format:\n", "", $statement_md);
 		$statement_md = str_replace("Input is given from Standard Input in the following format:\n", "", $statement_md);
 		$statement_md = str_replace("### Problem Statement\n", "", $statement_md);
+		$statement_md = str_replace("<pre class=\"prettyprint linenums\">\n", "", $statement_md);
 		// 给输入格式加上语言标记
 		$statement_md = str_replace("### 输入\n\n\n```", "### 输入\n\n\n```format", $statement_md);
 	}

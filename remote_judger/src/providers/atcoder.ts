@@ -55,15 +55,11 @@ export function getAccountInfoFromEnv(): RemoteAccount | null {
 }
 
 function parseProblemId(id: string) {
-  let [, contestId, problemId] = /^(\w+)([a-z][1-9]?)$/.exec(id);
+  let [, contestId, problemId] = /^(\w+)_([a-z1-9][1-9]?)$/.exec(id);
 
-  if (contestId.endsWith('_')) {
-    problemId = `${contestId}${problemId}`;
-  } else {
-    problemId = `${contestId}_${problemId}`;
-  }
+  problemId = `${contestId}_${problemId}`;
 
-  contestId = contestId.replace(/_/g, '');
+  contestId = contestId.replace(/_/g, '-');
 
   return [contestId, problemId];
 }
@@ -256,7 +252,7 @@ export default class AtcoderProvider implements IBasicProvider {
     } = new JSDOM(status);
 
     return document
-      .querySelector('.submission-score[data-id]')
+      .querySelector('.submission-score[data-id]') //CSS attribute selector
       .getAttribute('data-id');
   }
 

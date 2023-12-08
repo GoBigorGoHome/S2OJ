@@ -9,7 +9,7 @@ TODO：设置 docker daemon 开机启动。
 # 不要使用 sudo 运行 docker
 
 
-# 进入的容器的 bash
+# 进入容器的 bash
 
 `docker exec -it 容器名 bash`
 

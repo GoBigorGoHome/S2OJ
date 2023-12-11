@@ -24,7 +24,7 @@ class UOJRemoteProblem {
 				'Task not found',
 				'指定されたタスクが見つかりません',
 			],
-			'languages' => ['C', 'C++', 'Java11', 'Python3', 'Pascal'],
+			'languages' => ['C', 'C++17', 'C++20', 'Python3'],
 			'submit_type' => ['bot'],
 		],
 		'uoj' => [

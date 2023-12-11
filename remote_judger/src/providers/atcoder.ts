@@ -11,23 +11,23 @@ const logger = new Logger('remote/atcoder');
 
 const LANGS_MAP = {
   C: {
-    name: 'C (GCC 9.2.1)',
-    id: 4001,
+    name: 'C (GCC 12.2)',
+    id: 5017,
     comment: '//',
   },
-  'C++': {
-    name: 'C++ (GCC 9.2.1)',
-    id: 4003,
+  'C++17': {
+    name: 'C++17 (GCC 12.2)',
+    id: 5053,
     comment: '//',
   },
-  Pascal: {
-    name: 'Pascal (FPC 3.0.4)',
-    id: 4041,
+  'C++20': {
+    name: 'C++20 (GCC 12.2)',
+    id: 5001,
     comment: '//',
   },
   Python3: {
-    name: 'Python (3.8.2)',
-    id: 4006,
+    name: 'Python (CPython 3.11.4)',
+    id: 5055,
     comment: '#',
   },
 };
@@ -193,12 +193,10 @@ export default class AtcoderProvider implements IBasicProvider {
     const comment = programType.comment;
 
     // 给提交的代码加上注释
-    if (comment) {
-      const msg = `S2OJ Submission #${submissionId} @ ${new Date().getTime()}`;
-      if (typeof comment === 'string') code = `${comment} ${msg}\n${code}`;
-      else if (comment instanceof Array)
-        code = `${comment[0]} ${msg} ${comment[1]}\n${code}`;
-    }
+    const msg = `S2OJ Submission #${submissionId} @ ${new Date().getTime()}`;
+    if (typeof comment === 'string') code = `${comment} ${msg}\n${code}`;
+    else if (comment instanceof Array)
+      code = `${comment[0]} ${msg} ${comment[1]}\n${code}`;
 
     const [contestId, problemId] = parseProblemId(id);
     const csrf = await this.getCsrfToken(
@@ -233,6 +231,16 @@ export default class AtcoderProvider implements IBasicProvider {
       return null;
     }
 
+    if (!res.redirect) {
+      // 可能是语言id错误或是代码太长。
+      await end({
+        error: true,
+        status: 'Judgment Failed',
+        message: 'Failed to submit code. Internal error, please report to admin.',
+      });
+      return null;
+    }
+
     if (res.header['set-cookie']) {
       this.cookie = res.header['set-cookie'];
     }
@@ -251,9 +259,29 @@ export default class AtcoderProvider implements IBasicProvider {
       window: { document },
     } = new JSDOM(status);
 
-    return document
-      .querySelector('.submission-score[data-id]') //CSS attribute selector
-      .getAttribute('data-id');
+    const submission_dom = document.querySelector('.submission-score[data-id]');
+    if (!submission_dom) {
+      await end({
+        error: true,
+        status: 'Judgment Failed',
+        message: 'Failed to submit code. Please report to admin.',
+      });
+
+      return null;
+    }
+    const remoteSubmissionId = submission_dom.getAttribute('data-id');
+    const detail_url = `/contests/${contestId}/submissions/${remoteSubmissionId}`;
+    const { text } = await this.get(detail_url).retry(3);
+    if (RegExp(msg).test(text)) {
+      return remoteSubmissionId;
+    }
+
+    await end({
+      error: true,
+      status: 'Judgment Failed',
+      message: 'Failed to submit code. Please report to admin.',
+    });
+    return null;
   }
 
   async ensureIsOwnSubmission(id: string) {

@@ -97,7 +97,15 @@ if (UOJContest::cur()) {
 	}
 }
 
-$submission_requirement = UOJProblem::cur()->getSubmissionRequirement();
+//对于远程题，不使用数据库里存储的提交要求，因为远程OJ的提交语言会变动。
+//另一个方法是在远程OJ的提交要求变动时，更新数据库；此方法我还不会。
+if (UOJProblem::info('type') == 'remote') {
+	$remote_oj = UOJProblem::cur()->getExtraConfig('remote_online_judge');
+	$submission_requirement = UOJRemoteProblem::getSubmissionRequirements($remote_oj);
+} else {
+	$submission_requirement = UOJProblem::cur()->getSubmissionRequirement();
+}
+
 $custom_test_requirement = UOJProblem::cur()->getCustomTestRequirement();
 $custom_test_enabled = $custom_test_requirement && $pre_submit_check_ret === true && UOJProblem::info('type') != 'remote';
 

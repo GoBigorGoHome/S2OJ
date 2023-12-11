@@ -296,7 +296,7 @@ class UOJRemoteProblem {
 		if (!$res) return null;
 
 		$dom = new \IvoPetkov\HTML5DOMDocument();
-		$dom->loadHTML($res['response']);
+		$dom->loadHTML($res['response'], \IvoPetkov\HTML5DOMDocument::ALLOW_DUPLICATE_IDS);
 		$container_dom = $dom->querySelectorAll('#main-container > div.row > div.col-sm-12')->item(1);
 
 		if (!$container_dom) return null;

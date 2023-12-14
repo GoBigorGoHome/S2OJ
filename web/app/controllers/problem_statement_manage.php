@@ -162,17 +162,25 @@ if (UOJProblem::info('type') == 'remote') {
 			$data['statement'] = '<div data-pdf data-src="/problem/' . UOJProblem::info('id') . '/resources/statement.pdf"></div>' . "\n" . $data['statement'];
 		}
 
+		$remote_content = UOJRemoteProblem::downloadImagesInRemoteContent(UOJProblem::info('id'), $data['statement']);
+		if ($data['type'] == 'pdf') {
+			$statement_md = $remote_content;
+		} else {
+			$statement_md = UOJRemoteProblem::getStatementMarkdown($remote_online_judge, $remote_content);
+		}
+
 		DB::update([
 			"update problems_contents",
 			"set", [
-				"remote_content" => HTML::purifier(['a' => ['target' => 'Enum#_blank']])->purify($data['statement']),
+				"remote_content" => $remote_content,
+				"statement_md" => $statement_md,
+				"statement" => $remote_content
 			],
 			"where", [
 				"id" => UOJProblem::info('id'),
 			],
 		]);
 
-		UOJRemoteProblem::downloadImagesInRemoteContent(UOJProblem::info('id'));
 
 		redirectTo(UOJProblem::cur()->getUri());
 	};

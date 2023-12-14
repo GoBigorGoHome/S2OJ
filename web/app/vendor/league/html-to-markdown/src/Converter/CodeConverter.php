@@ -38,8 +38,8 @@ class CodeConverter implements ConverterInterface
 
         // Checking if it's a code block or span
         if ($this->shouldBeBlock($element, $code)) {
-            // Code block detected, newlines will be added in parent
-            $markdown .= '```' . $language . "\n" . $code . "\n" . '```';
+            // Code block detected, add a newline if needed
+            $markdown .= '```' . $language . "\n" . $code . (\str_ends_with($code, "\n") ? "" : "\n") . '```';
         } else {
             // One line of code, wrapping it on one backtick, removing new lines
             $markdown .= '`' . \preg_replace('/\r\n|\r|\n/', '', $code) . '`';
@@ -63,6 +63,6 @@ class CodeConverter implements ConverterInterface
             return true;
         }
 
-        return \preg_match('/[^\s]` `/', $code) === 1;
+        return \preg_match('/[^\s]` `/', $code) === 1; // todo: 这一行是什么意思？
     }
 }

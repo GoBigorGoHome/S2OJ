@@ -75,7 +75,6 @@ $new_remote_problem_form->addInput('remote_problem_id', [
 	},
 ]);
 
-use League\HTMLToMarkdown\HtmlConverter;
 
 $new_remote_problem_form->handle = function (&$vdata) {
 	$remote_online_judge = $_POST['remote_online_judge'];
@@ -114,38 +113,15 @@ $new_remote_problem_form->handle = function (&$vdata) {
 	dataNewProblem($id);
 
 	if ($data['type'] == 'pdf') {
-		file_put_contents(UOJContext::storagePath(), "/problem_resources/$id/statement.pdf", $data['pdf_data']);
+		file_put_contents(UOJContext::storagePath() . "/problem_resources/$id/statement.pdf", $data['pdf_data']);
 		$data['statement'] = "<div data-pdf data-src=\"/problem/$id/resources/statement.pdf\"></div>\n" . $data['statement'];
 	}
 
-	$remote_content = HTML::purifier(['a' => ['target' => 'Enum#_blank']])->purify($data['statement']);
-	$converter = new HtmlConverter(array('strip_tags' => true, 'italic_style' => '*'));
-	$statement_md = $converter->convert($remote_content);
-	$statement_md = str_replace("\\\\", "\\", $statement_md);
-	$statement_md = str_replace("\\_", "_", $statement_md);
-	
-	// 翻译 atcoder 题面关键词
-	if ($remote_online_judge == "atcoder") {
-		$statement_md = str_replace("### Input", "### 输入", $statement_md);
-		$statement_md = str_replace("### Output", "### 输出", $statement_md);
-		$statement_md = str_replace("### Constraints", "### 限制", $statement_md);
-		$statement_md = str_replace("### Sample Input", "### 样例输入", $statement_md);
-		$statement_md = str_replace("### Sample Output", "### 样例输出", $statement_md);
-		$statement_md = str_replace("All input values are integers.", "输入的值都是整数。", $statement_md);
-		$statement_md = str_replace("All values in the input are integers.", "输入的值都是整数。", $statement_md);
-		$statement_md = str_replace("All values in input are integers.", "输入的值都是整数。", $statement_md);
-		$statement_md = str_replace("Print the answer as an integer.", "输出答案。", $statement_md);
-		$statement_md = str_replace("Print the answer.", "输出答案。", $statement_md);
-		// html 特殊字符
-		$statement_md = str_replace("&lt;", "<", $statement_md);
-		$statement_md = str_replace("&gt;", ">", $statement_md);
-		// 删除一些句子
-		$statement_md = str_replace("The input is given from Standard Input in the following format:\n", "", $statement_md);
-		$statement_md = str_replace("Input is given from Standard Input in the following format:\n", "", $statement_md);
-		$statement_md = str_replace("### Problem Statement\n", "", $statement_md);
-		$statement_md = str_replace("<pre class=\"prettyprint linenums\">\n", "", $statement_md);
-		// 给输入格式加上语言标记
-		$statement_md = str_replace("### 输入\n\n\n```", "### 输入\n\n\n```format", $statement_md);
+	$remote_content = UOJRemoteProblem::downloadImagesInRemoteContent(strval($id), $data['statement']);
+	if ($data['type'] == 'pdf') {
+		$statement_md = $remote_content;
+	} else {
+		$statement_md = UOJRemoteProblem::getStatementMarkdown($remote_online_judge, $remote_content);
 	}
 
 	DB::insert([
@@ -162,7 +138,6 @@ $new_remote_problem_form->handle = function (&$vdata) {
 		DB::tuple([$id, $remote_provider['name']]),
 	]);
 
-	UOJRemoteProblem::downloadImagesInRemoteContent(strval($id));
 
 	redirectTo("/problem/{$id}");
 	die();

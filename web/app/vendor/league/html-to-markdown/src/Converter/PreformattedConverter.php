@@ -11,7 +11,9 @@ class PreformattedConverter implements ConverterInterface
     public function convert(ElementInterface $element): string
     {
         $preContent = \html_entity_decode($element->getChildrenAsString());
-        $preContent = \str_replace(['<pre>', '</pre>'], '', $preContent);
+        $preContent = \preg_replace('/<pre\b[^>]*>/', '', $preContent);
+        \assert($preContent !== null);
+        $preContent = \str_replace('</pre>', '', $preContent);
 
         /*
          * Checking for the code tag.
@@ -28,13 +30,19 @@ class PreformattedConverter implements ConverterInterface
 
         // If the execution reaches this point it means it's just a pre tag, with no code tag nested
 
+        // Normalizing new lines
+        $preContent = \preg_replace('/\r\n|\r|\n/', "\n", $preContent);
+
+        // remove the leading newline character
+        if (\strlen($preContent) > 0 && $preContent[0] == "\n") {
+            $preContent = \substr($preContent, 1);
+        }
+
         // Empty lines are a special case
         if ($preContent === '') {
             return "```\n```\n\n";
         }
 
-        // Normalizing new lines
-        $preContent = \preg_replace('/\r\n|\r|\n/', "\n", $preContent);
         \assert(\is_string($preContent));
 
         // Ensure there's a newline at the end

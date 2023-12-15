@@ -380,7 +380,56 @@ class UOJRemoteProblem {
 
 		if (!$res) return null;
 
-		return static::getUojLikeProblemBasicInfoFromHtml($id, $res['response'], 'qoj');
+		$remote_provider = static::$providers['qoj'];
+
+		$dom = new \IvoPetkov\HTML5DOMDocument();
+		$dom->loadHTML($res['response']);
+
+		$title_dom = $dom->querySelector('.page-header');
+		$title_matches = [];
+		preg_match('/^#\s*[1-9][0-9]*\.\s*(.*)$/', trim($title_dom->textContent), $title_matches);
+		$title = "【{$remote_provider['short_name']}{$id}】{$title_matches[1]}";
+
+		$limit_dom = $dom->querySelector('.uoj-content > .row');
+		$limit_matches = [];
+		preg_match('/^Time Limit:\s*([0-9.]+) s\s*Memory Limit:\s*([1-9][0-9]*) MB/', trim($limit_dom->textContent), $limit_matches);
+		$time_limit = $limit_matches[1];
+		$memory_limit = $limit_matches[2];
+		$statement_dom = $dom->querySelector('.uoj-article');
+		$statement = HTML::tag('h3', [], '题目描述');
+
+		foreach ($statement_dom->querySelectorAll('a') as &$elem) {
+			$href = $elem->getAttribute('href');
+			$href = getAbsoluteUrl($href, $remote_provider['url']);
+			$elem->setAttribute('href',  $href);
+		}
+
+		$statement .= $statement_dom->innerHTML;
+
+		$res = [
+			'type' => 'html',
+			'title' => $title,
+			'time_limit' => $time_limit,
+			'memory_limit' => $memory_limit,
+			'difficulty' => -1,
+			'statement' => $statement,
+		];
+
+		// QOJ PDF
+		$pdf_statement_dom = $dom->getElementById('statements-pdf');
+
+		if ($pdf_statement_dom) {
+			$pdf_url = $pdf_statement_dom->getAttribute('src');
+			$pdf_res = static::curl_get(getAbsoluteUrl($pdf_url, $remote_provider['url']));
+
+			if (str_starts_with($pdf_res['content-type'], 'application/pdf')) {
+				$res['type'] = 'pdf';
+				$res['pdf_data'] = $pdf_res['response'];
+				$res['statement'] = '';
+			}
+		}
+
+		return $res;
 	}
 
 	private static function getLojProblemBasicInfo($id) {

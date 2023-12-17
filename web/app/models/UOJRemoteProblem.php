@@ -566,6 +566,7 @@ class UOJRemoteProblem {
 
 	public static function getStatementMarkdown($remote_oj, $remote_content) {
 		$converter = new \League\HTMLToMarkdown\HtmlConverter(array('strip_tags' => true, 'italic_style' => '*'));
+		$converter->getEnvironment()->addConverter(new \League\HTMLToMarkdown\Converter\TableConverter());
 		$statement_md = $converter->convert($remote_content);
 		$statement_md = str_replace("\\\\", "\\", $statement_md);
 		$statement_md = str_replace("\\_", "_", $statement_md);

@@ -135,7 +135,10 @@ class UOJRemoteProblem {
 		$title = explode('. ', trim($statement_dom->querySelector('.title')->innerHTML))[1];
 		$title_id = str_starts_with($id, 'GYM') ? substr($id, 3) : $id;
 		$title = "【{$title_prefix}{$title_id}】{$title}";
-		$time_limit = intval(substr($statement_dom->querySelector('.time-limit')->innerHTML, 53));
+		$time_limit_string = substr($statement_dom->querySelector('.time-limit')->innerHTML, 53);
+		$time_limit_matches = [];
+		preg_match('/([0-9.]+).*/', $time_limit_string, $time_limit_matches);
+		$time_limit = $time_limit_matches[1];
 		$memory_limit = intval(substr($statement_dom->querySelector('.memory-limit')->innerHTML, 55));
 		$difficulty = -1;
 
@@ -246,21 +249,6 @@ class UOJRemoteProblem {
 			'statement' => $statement,
 		];
 
-		if ($oj == 'qoj') { // QOJ PDF
-			$pdf_statement_dom = $dom->getElementById('statements-pdf');
-
-			if ($pdf_statement_dom) {
-				$pdf_url = $pdf_statement_dom->getAttribute('src');
-				$pdf_res = static::curl_get(getAbsoluteUrl($pdf_url, $remote_provider['url']));
-
-				if (str_starts_with($pdf_res['content-type'], 'application/pdf')) {
-					$res['type'] = 'pdf';
-					$res['pdf_data'] = $pdf_res['response'];
-					$res['statement'] = '';
-				}
-			}
-		}
-
 		return $res;
 	}
 
@@ -307,8 +295,8 @@ class UOJRemoteProblem {
 		$limit_dom = $container_dom->querySelector('p');
 
 		$time_limit_matches = [];
-		preg_match('/Time Limit: (\d+)/', $limit_dom->textContent, $time_limit_matches);
-		$time_limit = intval($time_limit_matches[1]);
+		preg_match('/Time Limit: ([0-9.]+)/', $limit_dom->textContent, $time_limit_matches);
+		$time_limit = $time_limit_matches[1];
 
 		$memory_limit_matches = [];
 		preg_match('/Memory Limit: (\d+)/', $limit_dom->textContent, $memory_limit_matches);

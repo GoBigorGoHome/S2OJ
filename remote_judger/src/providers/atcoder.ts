@@ -288,34 +288,49 @@ export default class AtcoderProvider implements IBasicProvider {
     throw new Error('Method not implemented.');
   }
 
-  get_ac_cnt($ : cheerio.Root) {
-    const all_ac_span = $('#main-container > div.row > div:nth-child(2) > div:nth-child(9) > div > table > tbody > tr:nth-child(3) > td:nth-child(3)').find('span.label-success');
-    if (all_ac_span !== null) {
-      const num = all_ac_span.parent().next().text().match(/\d+/)?.at(0);
-      if (num === undefined) return 0;
-      const all_ac_count = +num;
-      const sample_ac_span = $('#main-container > div.row > div:nth-child(2) > div:nth-child(9) > div > table > tbody > tr:nth-child(3) > td:nth-child(2)').find('span.label-success');
-      if (sample_ac_span === null)
-        return all_ac_count;
-      const sample_ac_num = sample_ac_span.parent().next().text().match(/\d+/)?.at(0);
-      if (sample_ac_num === undefined)
-        return all_ac_count;
-      return all_ac_count - (+sample_ac_num);
-    }
-    return 0;
-  }
-
-  get_test_cases_cnt($ : cheerio.Root) {
-    const samples = $('#main-container > div.row > div:nth-child(2) > div:nth-child(10) > table > tbody > tr:nth-child(1) > td:nth-child(2)').text();
-    const all_tests = $('#main-container > div.row > div:nth-child(2) > div:nth-child(10) > table > tbody > tr:nth-child(2) > td:nth-child(2)').text();
-    return all_tests.split(',').length - samples.split(',').length;
-  }
-
-  async get_points(contest_id : string, submission_id : string) {
+  async get_points(contest_id: string, submission_id: string) {
     const detail_url = `/contests/${contest_id}/submissions/${submission_id}`;
     const { text } = await this.get(detail_url).retry(3);
     const $ = cheerio.load(text);
-    return this.get_ac_cnt($) * 100 / this.get_test_cases_cnt($);
+
+    let sample_test_cnt = 0;
+    let all_test_cnt = 0;
+    const panel_3 = $('#main-container > div.row > div:nth-child(2) > div.panel:nth(2)');
+    const test_cases_counts = panel_3.find('table > tbody > tr').map((i, elem) => {
+      const test_set_name = $(elem).find('td:first').text().trim().toLowerCase();
+      const test_cases_cnt = $(elem).find('td:last').text().split(',').length;
+      if (test_set_name == 'all') {
+        all_test_cnt = test_cases_cnt;
+      } else {
+        sample_test_cnt = test_cases_cnt;
+      }
+    });
+
+    if (all_test_cnt == 0)
+      return -1;
+
+    let sample_ac_cnt = 0;
+    let all_ac_cnt = 0;
+
+    const panel_2 = $('#main-container > div.row > div:nth-child(2) > div.panel:nth(1)');
+    // const set_names = panel_2.find('table > tbody > tr:nth(0) > th:gt(0)').map((i, elem) => {
+    //   return $(elem).text().trim().toLowerCase();
+    // }).toArray();
+    const ac_counts = panel_2.find('table > tbody > tr:nth(2) > td').map((i, elem) => {
+      const ac_span = $(elem).find('span.label-success');
+      if (ac_span.length == 0) {
+        return 0;
+      }
+      return +ac_span.parent().next().text().match(/\d+/)?.at(0)
+    }).get();
+
+    if (ac_counts.length == 1) {
+      all_ac_cnt = ac_counts[0];
+    } else {
+      all_ac_cnt = ac_counts[1];
+      sample_ac_cnt = ac_counts[0];
+    }
+    return (all_ac_cnt - sample_ac_cnt) * 100 / (all_test_cnt - sample_test_cnt);
   }
 
   // id：submission ID on AtCoder.
@@ -389,8 +404,8 @@ export default class AtcoderProvider implements IBasicProvider {
         // 计算得分
         let atcoder_score = 0;
         if (statusElem.title === 'Accepted' ||
-            statusElem.innerHTML.trim() === 'AC') {
-            atcoder_score = 100;
+          statusElem.innerHTML.trim() === 'AC') {
+          atcoder_score = 100;
         } else {
           atcoder_score = await this.get_points(contestId, id);
         }

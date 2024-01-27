@@ -18,14 +18,9 @@ const LANGS_MAP = {
     id: 43,
     comment: '//',
   },
-  'C++': {
-    name: 'GNU G++14 6.4.0',
-    id: 50,
-    comment: '//',
-  },
   'C++17': {
-    name: 'GNU G++17 7.3.0',
-    id: 54,
+    name: 'GNU G++17 9.2.0 (64 bit, msys 2)',
+    id: 61,
     comment: '//',
   },
   'C++20': {
@@ -245,7 +240,7 @@ export default class CodeforcesProvider implements IBasicProvider {
       return null;
     }
 
-    const programType = LANGS_MAP[lang] || LANGS_MAP['C++'];
+    const programType = LANGS_MAP[lang] || LANGS_MAP['C++17'];
     const comment = programType.comment;
 
     if (comment) {

@@ -83,6 +83,15 @@ $new_msg_tot = $new_user_msg_num + $new_system_msg_num;
 		<?= HTML::js_src('/js/blog-editor/blog-editor.js?v=' . UOJConfig::$data['profile']['s2oj-version']) ?>
 	<?php endif ?>
 
+	<?php if (isset($REQUIRE_LIB['slides-editor'])) : ?>
+		<!-- UOJ blog editor -->
+		<?php $REQUIRE_LIB['jquery.hotkeys'] = '' ?>
+		<?php $REQUIRE_LIB['switch'] = '' ?>
+		<?= HTML::css_link('/css/slides-editor.css') ?>
+		<?= HTML::js_src('/js/blog-editor/slides-editor.js?v=' . UOJConfig::$data['profile']['s2oj-version']) ?>
+		<?= HTML::js_src('/js/blog-editor/markslides-library.min.js') ?>
+	<?php endif ?>
+
 	<?php if (isset($REQUIRE_LIB['md5'])) : ?>
 		<!-- MD5 -->
 		<?= HTML::js_src('/js/md5.min.js') ?>
@@ -104,14 +113,18 @@ $new_msg_tot = $new_user_msg_num + $new_system_msg_num;
 		<!-- MathJax -->
 		<script>
 			MathJax = {
-				loader: {load: ['[tex]/mathtools']},
+				loader: {
+					load: ['[tex]/mathtools']
+				},
 				tex: {
 					inlineMath: [
 						['$', '$'],
 						['\\(', '\\)']
 					],
 					processEscapes: true,
-					packages: {'[+]': ['mathtools']}
+					packages: {
+						'[+]': ['mathtools']
+					}
 				},
 				options: {
 					skipHtmlTags: {

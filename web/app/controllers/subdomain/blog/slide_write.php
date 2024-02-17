@@ -16,9 +16,8 @@ if (isset($_GET['id'])) {
 	isSuperUser(Auth::user()) || UOJUserBlog::userIsOwner(Auth::user()) || UOJResponse::page403();
 }
 
-$blog_editor = new UOJBlogEditor();
-$blog_editor->type = 'slide';
-$blog_editor->name = 'blog';
+$blog_editor = new UOJSlidesEditor();
+$blog_editor->name = 'slides';
 if ($blog) {
 	$blog_editor->cur_data = array(
 		'title' => $blog['title'],
@@ -80,6 +79,7 @@ $blog_editor->save = function ($data) {
 		$ret['blog_url'] = UOJBlog::cur()->getBlogUri();
 	}
 	UOJBlog::cur()->updateTags($data['tags']);
+	// 这个返回值 $ret 是干什么用的？
 	return $ret;
 };
 

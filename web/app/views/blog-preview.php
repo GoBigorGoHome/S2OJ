@@ -1,4 +1,5 @@
 <?php
+// $blog 来自哪里？
 if ($is_preview) {
 	$readmore_pos = strpos($blog->content['content'], '<!-- readmore -->');
 	if ($readmore_pos !== false) {

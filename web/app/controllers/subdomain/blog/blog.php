@@ -244,6 +244,7 @@ $comments_pag = new Paginator([
 	var user_can_hide_comment = <?= json_encode(isset($hide_form)) ?>;
 </script>
 
+<!-- 展示博客内容 -->
 <?php UOJBlog::cur()->echoView(['show_title_only' => isset($_GET['page']) && $_GET['page'] != 1]) ?>
 
 <?php if (isset($hide_form)) : ?>

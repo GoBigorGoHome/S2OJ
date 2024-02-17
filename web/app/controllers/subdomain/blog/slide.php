@@ -1,3 +1,4 @@
+<!-- /blog/userName/slide/id 被路由到了这里 -->
 <?php
 requirePHPLib('form');
 
@@ -11,6 +12,6 @@ UOJUserBlog::userIsOwner(Auth::user()) || UOJUser::checkPermission(Auth::user(),
 $page_config = UOJContext::pageConfig();
 $page_config += [
 	'PageTitle' => HTML::stripTags(UOJBlog::info('title')) . ' - 幻灯片',
-	'content' => UOJBlog::cur()->queryContent()['content']
+	'content_md' => UOJBlog::cur()->queryContent()['content_md']
 ];
 uojIncludeView('slide', $page_config);

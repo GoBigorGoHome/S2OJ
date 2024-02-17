@@ -24,7 +24,7 @@
 
 	<script>
 		const rootElement = document.getElementById('slides-root');
-		MarkSlidesLibrary.slide_show(rootElement, "<?= $content_md ?>");
+		MarkSlidesLibrary.slide_show(rootElement, `<?= $content_md ?>`);
 	</script>
 </body>
 

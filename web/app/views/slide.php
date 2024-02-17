@@ -24,7 +24,7 @@
 
 	<script>
 		const rootElement = document.getElementById('slides-root');
-		MarkSlidesLibrary.slide_show(rootElement, `<?= $content_md ?>`);
+		MarkSlidesLibrary.slide_show(rootElement, <?= json_encode($content_md, JSON_UNESCAPED_UNICODE); ?>);
 	</script>
 </body>
 

@@ -314,7 +314,7 @@ class UOJRemoteProblem {
 		$statement_first_child = $statement_dom->querySelector('p');
 		if ($statement_first_child) {
 			$first_child_content = trim($statement_first_child->textContent);
-			if (str_starts_with($first_child_content, 'Score :') || str_starts_with($first_child_content, '配点 :')) {
+			if (str_starts_with($first_child_content, 'Score: ') || str_starts_with($first_child_content, '配点 :')) {
 				$statement_dom->removeChild($statement_first_child);
 			}
 		}

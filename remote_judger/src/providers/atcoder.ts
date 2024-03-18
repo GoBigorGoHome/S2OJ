@@ -288,6 +288,15 @@ export default class AtcoderProvider implements IBasicProvider {
     throw new Error('Method not implemented.');
   }
 
+  async get_compile_error(contest_id: string, submission_id: string) {
+    const detail_url = `/contests/${contest_id}/submissions/${submission_id}`;
+    const { text } = await this.get(detail_url).retry(3);
+    const $ = cheerio.load(text);
+
+    const compile_error = $('#main-container > div.row > div:nth-child(2) > pre:nth(1)');
+    return compile_error.text();
+  }
+
   async get_points(contest_id: string, submission_id: string) {
     const detail_url = `/contests/${contest_id}/submissions/${submission_id}`;
     const { text } = await this.get(detail_url).retry(3);
@@ -295,13 +304,19 @@ export default class AtcoderProvider implements IBasicProvider {
 
     let sample_test_cnt = 0;
     let all_test_cnt = 0;
-    const panel_3 = $('#main-container > div.row > div:nth-child(2) > div.panel:nth(2)');
-    const test_cases_counts = panel_3.find('table > tbody > tr').map((i, elem) => {
+
+    // :nt(2) 选择的是第三个元素，index从0开始。
+    // :nth(index)属于positional pseudo-selector，详见https://github.com/cheeriojs/cheerio-select/blob/master/README.md
+    // div:nth-child(2) 选择是第二个孩子的 div 元素。编号从1开始。
+
+    // judge_result_panel_2是整个submission页面上的第3个panel，是 Judge Result 这一节里的第2个panel。
+    const judge_result_panel_2 = $('#main-container > div.row > div:nth-child(2) > div.panel:nth(2)');
+    judge_result_panel_2.find('table > tbody > tr').map((i, elem) => {
       const test_set_name = $(elem).find('td:first').text().trim().toLowerCase();
       const test_cases_cnt = $(elem).find('td:last').text().split(',').length;
       if (test_set_name == 'all') {
         all_test_cnt = test_cases_cnt;
-      } else {
+      } else if (test_set_name == 'sample') {
         sample_test_cnt = test_cases_cnt;
       }
     });
@@ -312,11 +327,8 @@ export default class AtcoderProvider implements IBasicProvider {
     let sample_ac_cnt = 0;
     let all_ac_cnt = 0;
 
-    const panel_2 = $('#main-container > div.row > div:nth-child(2) > div.panel:nth(1)');
-    // const set_names = panel_2.find('table > tbody > tr:nth(0) > th:gt(0)').map((i, elem) => {
-    //   return $(elem).text().trim().toLowerCase();
-    // }).toArray();
-    const ac_counts = panel_2.find('table > tbody > tr:nth(2) > td').map((i, elem) => {
+    const judge_result_panel_1 = $('#main-container > div.row > div:nth-child(2) > div.panel:nth(1)');
+    const ac_counts = judge_result_panel_1.find('table > tbody > tr:nth(2) > td').map((i, elem) => {
       const ac_span = $(elem).find('span.label-success');
       if (ac_span.length == 0) {
         return 0;
@@ -382,11 +394,12 @@ export default class AtcoderProvider implements IBasicProvider {
         }
 
         if (statusElem.title === 'Compilation Error') {
+          const compile_error = await this.get_compile_error(contestId, id);
           return await end({
             id,
             error: true,
             status: 'Compile Error',
-            message: '',
+            message: compile_error,
           });
         }
 

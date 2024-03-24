@@ -88,6 +88,10 @@ UOJGroupAssignment::cur()->userCanView(['ensure' => true]);
 			var problems = <?= json_encode($problems) ?>;
 			var standings = <?= json_encode($standings) ?>;
 
+			function format_score(score) {
+				return parseFloat(score.toFixed(2));
+			}
+
 			$('#standings').long_table(
 				standings,
 				1,
@@ -109,7 +113,7 @@ UOJGroupAssignment::cur()->userCanView(['ensure' => true]);
 
 					col_tr += '<td>' + getUserLink(row[1][0], row[1][1]) + '</td>';
 					col_tr += '<td>' +
-						'<span class="uoj-score" data-max="' + (problems.length * 100) + '" style="color:' + getColOfScore(row[0] / problems.length) + '">' + row[0] + '</span>' +
+						'<span class="uoj-score" data-max="' + (problems.length * 100) + '" style="color:' + getColOfScore(row[0] / problems.length) + '">' + format_score(row[0]) + '</span>' +
 						'</td>';
 					for (var i = 0; i < row[2].length; i++) {
 						var col = row[2][i];
@@ -120,7 +124,7 @@ UOJGroupAssignment::cur()->userCanView(['ensure' => true]);
 							} else {
 								col_tr += '<td>';
 							}
-							col_tr += '<a class="text-decoration-none uoj-score" href="/submission/' + col[0] + '" style="color:' + getColOfScore(col[1]) + '">' + col[1] + '</a>';
+							col_tr += '<a class="text-decoration-none uoj-score" href="/submission/' + col[0] + '" style="color:' + getColOfScore(col[1]) + '">' + format_score(col[1]) + '</a>';
 							col_tr += '</td>';
 						} else {
 							col_tr += '<td></td>';

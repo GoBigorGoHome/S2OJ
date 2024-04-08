@@ -10,6 +10,12 @@ class ImageConverter implements ConverterInterface
 {
     public function convert(ElementInterface $element): string
     {
+        // If <img> has a width attribute, do not convert it.
+        $width = $element->getAttribute('width');
+        if ($width !== '') {
+            return \html_entity_decode($element->getChildrenAsString());
+        }
+
         $src   = $element->getAttribute('src');
         $alt   = $element->getAttribute('alt');
         $title = $element->getAttribute('title');

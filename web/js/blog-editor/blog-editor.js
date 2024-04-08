@@ -102,6 +102,7 @@ function blog_editor_init(name, editor_config) {
 				language: editor_config.type == 'slide' ? 'yaml' : 'markdown-math',
 				automaticLayout: true,
 				fontSize: "16px",
+				renderWhitespace: 'trailing',
 				minimap: {
 					enabled: false,
 				},

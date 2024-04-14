@@ -1,6 +1,6 @@
 import Logger from 'reggol';
 
-Logger.levels.base = process.env.DEV ? 3 : 2;
+Logger.levels.base = process.env.DEV ? 1 : 2;
 Logger.targets[0].showTime = 'dd hh:mm:ss';
 Logger.targets[0].label = {
   align: 'right',

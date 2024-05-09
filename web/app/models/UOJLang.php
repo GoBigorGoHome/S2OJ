@@ -8,6 +8,7 @@ class UOJLang {
 		'C++11'     => 'C++ 11',
 		'C++17'     => 'C++ 17',
 		'C++20'     => 'C++ 20',
+		'C++23'     => 'C++ 23',
 		'C'         => 'C',
 		'Python3'   => 'Python 3',
 		'Python2.7' => 'Python 2.7',
@@ -130,6 +131,7 @@ class UOJLang {
 			case 'C++14':
 			case 'C++17':
 			case 'C++20':
+			case 'C++23':
 				return 'language-cpp';
 			case 'Python2.7':
 			case 'Python3':

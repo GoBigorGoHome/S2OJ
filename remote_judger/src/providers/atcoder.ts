@@ -16,13 +16,18 @@ const LANGS_MAP = {
     comment: '//',
   },
   'C++17': {
-    name: 'C++17 (GCC 12.2)',
+    name: 'C++ 17 (GCC 12.2)',
     id: 5053,
     comment: '//',
   },
   'C++20': {
-    name: 'C++20 (GCC 12.2)',
+    name: 'C++ 20 (GCC 12.2)',
     id: 5001,
+    comment: '//',
+  },
+  'C++23': {
+    name: 'C++ 23 (GCC 12.2)',
+    id: 5028,
     comment: '//',
   },
   Python3: {

@@ -13,7 +13,7 @@ class UOJRemoteProblem {
 				'Statement is not available on English language',
 				'ограничение по времени на тест',
 			],
-			'languages' => ['C', 'C++17', 'C++20', 'Java17', 'Pascal', 'Python2', 'Python3'],
+			'languages' => ['C', 'C++', 'C++17', 'C++20', 'Python2', 'Python3'],
 			'submit_type' => ['bot', 'my'],
 		],
 		'atcoder' => [

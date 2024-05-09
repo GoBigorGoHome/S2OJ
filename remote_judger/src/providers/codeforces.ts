@@ -18,19 +18,19 @@ const LANGS_MAP = {
     id: 43,
     comment: '//',
   },
+  'C++': {
+    name: 'GNU G++14 6.4.0',
+    id: 50,
+    comment: '//',
+  },
   'C++17': {
-    name: 'GNU G++17 9.2.0 (64 bit, msys 2)',
-    id: 61,
+    name: 'GNU G++17 7.3.0',
+    id: 54,
     comment: '//',
   },
   'C++20': {
-    name: 'GNU G++20 11.2.0 (64 bit, winlibs)',
-    id: 73,
-    comment: '//',
-  },
-  Pascal: {
-    name: 'Free Pascal 3.0.2',
-    id: 4,
+    name: 'GNU G++20 13.2 (64 bit, winlibs)',
+    id: 89,
     comment: '//',
   },
   'Python2.7': {
@@ -39,7 +39,7 @@ const LANGS_MAP = {
     comment: '#',
   },
   Python3: {
-    name: 'Python 3.9.1',
+    name: 'Python 3.8.10',
     id: 31,
     comment: '#',
   },

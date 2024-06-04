@@ -14,7 +14,7 @@ requireLib('mathjax');
 
 				<h4 class="mt-4"><?= UOJConfig::$data['profile']['oj-name-short'] ?> 是什么</h4>
 				<p class="card-text">
-					大树老师的教室。
+					一个OJ。
 				</p>
 
 				<h4 class="mt-4">测评环境</h4>

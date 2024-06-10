@@ -40,9 +40,9 @@ setLAMPConf(){
     CustomLog \${APACHE_LOG_DIR}/uoj_judge.log common env=judgelog
     CustomLog \${APACHE_LOG_DIR}/uoj_access.log combined env=!judgelog
 
-    RewriteEngine on
-    RewriteCond   %{HTTPS} !=on
-    RewriteRule   ^(.*)  https://%{SERVER_NAME}$1 [L,R]
+    # RewriteEngine on
+    # RewriteCond   %{HTTPS} !=on
+    # RewriteRule   ^(.*)  https://%{SERVER_NAME}$1 [L,R]
 
     XSendFile On
     XSendFilePath /var/uoj_data

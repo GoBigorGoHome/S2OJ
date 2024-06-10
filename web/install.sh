@@ -97,9 +97,6 @@ UOJEOF
     #Enable modules and make UOJ site conf enabled
     a2ensite uoj-ssl.conf && a2dissite default-ssl.conf
     a2enmod ssl rewrite headers expires && sed -i -e '172s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
-    #Create UOJ session save dir and make PHP extensions available
-    mkdir --mode=733 /var/lib/php/uoj_sessions && chmod +t /var/lib/php/uoj_sessions
-	sed -i 's|;sys_temp_dir = "/tmp"|sys_temp_dir = "/tmp"|g' /etc/php/7.4/apache2/php.ini
 }
 
 setWebConf(){

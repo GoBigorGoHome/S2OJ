@@ -8,3 +8,5 @@ docker-compose.local.yml
 .config.local.php
 *.development.env
 *.local.env
+*.crt
+*.key

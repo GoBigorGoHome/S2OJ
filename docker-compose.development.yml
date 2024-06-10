@@ -80,3 +80,4 @@ services:
       - ./.config.development.php:/opt/uoj/web/app/.config.php
     ports:
       - "80:80"
+      - "443:443"

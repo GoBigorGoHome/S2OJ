@@ -35,4 +35,5 @@ exec bash\n" >/opt/up && chmod +x /opt/up
 
 ENV LANG=C.UTF-8 TZ=Asia/Shanghai
 EXPOSE 80
+EXPOSE 443
 CMD /opt/up

@@ -40,6 +40,10 @@ setLAMPConf(){
     CustomLog \${APACHE_LOG_DIR}/uoj_judge.log common env=judgelog
     CustomLog \${APACHE_LOG_DIR}/uoj_access.log combined env=!judgelog
 
+    RewriteEngine on
+    RewriteCond   %{HTTPS} !=on
+    RewriteRule   ^(.*)  https://%{SERVER_NAME}$1 [L,R]
+
     XSendFile On
     XSendFilePath /var/uoj_data
     XSendFilePath /var/www/uoj/app/storage
@@ -50,6 +54,49 @@ UOJEOF
     #Enable modules and make UOJ site conf enabled
     a2ensite 000-uoj.conf && a2dissite 000-default.conf
     a2enmod rewrite headers expires && sed -i -e '172s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+    #Create UOJ session save dir and make PHP extensions available
+    mkdir --mode=733 /var/lib/php/uoj_sessions && chmod +t /var/lib/php/uoj_sessions
+	sed -i 's|;sys_temp_dir = "/tmp"|sys_temp_dir = "/tmp"|g' /etc/php/7.4/apache2/php.ini
+}
+
+setSSLConf(){
+    printf "\n\n==> Setting Apache SSL configs\n"
+    #Set Apache UOJ site SSL conf
+    cat >/etc/apache2/sites-available/uoj-ssl.conf <<UOJEOF
+<IfModule mod_ssl.c>
+        <VirtualHost _default_:443>
+                ServerAdmin opensource@uoj.ac
+
+                DocumentRoot /var/www/uoj
+
+                ErrorLog \${APACHE_LOG_DIR}/uoj_error.log
+                CustomLog \${APACHE_LOG_DIR}/uoj_judge.log common env=judgelog
+                CustomLog \${APACHE_LOG_DIR}/uoj_access.log combined env=!judgelog
+
+                XSendFile On
+                XSendFilePath /var/uoj_data
+                XSendFilePath /var/www/uoj/app/storage
+                XSendFilePath /opt/uoj/web/app/storage
+                XSendFilePath /opt/uoj/judger/uoj_judger/include
+
+                SSLEngine on
+                SSLCertificateFile      /opt/uoj/my.crt
+                SSLCertificateKeyFile /opt/uoj/my.key
+                SSLCertificateChainFile /opt/uoj/root_bundle.crt
+
+                <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                                SSLOptions +StdEnvVars
+                </FilesMatch>
+                <Directory /usr/lib/cgi-bin>
+                                SSLOptions +StdEnvVars
+                </Directory>
+
+        </VirtualHost>
+</IfModule>
+UOJEOF
+    #Enable modules and make UOJ site conf enabled
+    a2ensite uoj-ssl.conf && a2dissite default-ssl.conf
+    a2enmod ssl rewrite headers expires && sed -i -e '172s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
     #Create UOJ session save dir and make PHP extensions available
     mkdir --mode=733 /var/lib/php/uoj_sessions && chmod +t /var/lib/php/uoj_sessions
 	sed -i 's|;sys_temp_dir = "/tmp"|sys_temp_dir = "/tmp"|g' /etc/php/7.4/apache2/php.ini
@@ -96,7 +143,7 @@ initProgress(){
 }
 
 prepProgress(){
-    setLAMPConf;setWebConf
+    setLAMPConf;setSSLConf;setWebConf
 }
 
 if [ $# -le 0 ]; then

@@ -204,9 +204,8 @@ export default class AtcoderProvider implements IBasicProvider {
       code = `${comment[0]} ${msg} ${comment[1]}\n${code}`;
 
     const [contestId, problemId] = parseProblemId(id);
-    const csrf = await this.getCsrfToken(
-      `/contests/${contestId}/tasks/${problemId}`
-    );
+    const referer = `/contests/${contestId}/tasks/${problemId}`;
+    const csrf = await this.getCsrfToken(referer);
 
     logger.debug(
       'Submitting',
@@ -219,12 +218,14 @@ export default class AtcoderProvider implements IBasicProvider {
     await next({ status: 'Submitting to AtCoder...' });
 
     // TODO: check submit time to ensure submission
-    const res = await this.post(`/contests/${contestId}/submit`).send({
-      csrf_token: csrf,
-      'data.TaskScreenName': problemId,
-      'data.LanguageId': programType.id,
-      sourceCode: code,
-    });
+    const res = await this.post(`/contests/${contestId}/submit`)
+      .set('Referer', referer)
+      .send({
+        'data.TaskScreenName': problemId,
+        'data.LanguageId': programType.id,
+        sourceCode: code,
+        csrf_token: csrf,
+      });
 
     if (res.error) {
       await end({
@@ -254,7 +255,9 @@ export default class AtcoderProvider implements IBasicProvider {
 
     const { text: status, header: status_header } = await this.get(
       `/contests/${contestId}/submissions/me`
-    ).retry(3);
+    )
+      .set('Referer', referer)
+      .retry(3);
 
     if (status_header['set-cookie']) {
       this.cookie = status_header['set-cookie'];
